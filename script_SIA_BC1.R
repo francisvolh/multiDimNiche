@@ -148,3 +148,5 @@ merSIAamS <-merSIAS[complete.cases(merSIAS[c("dC_Ala")]),]
 table(merSIAamS$Species, merSIAamS$decade)
 table(merSIAamS$Species)
 merSIAamS<-droplevels(merSIAamS)
+
+#test
