@@ -313,7 +313,7 @@ if (nisotope == 2) {
   }
 }
 ################################################################################
-#de rossman
+# rossman
 
 # Distance between centroids
 null_mu<-array(output2[seq(1,nrow(output2),by=2),,],
