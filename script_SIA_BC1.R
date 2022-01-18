@@ -3,7 +3,7 @@
 library(RColorBrewer)
 library(Rmisc)
 
-setwd("C:/Users/Francis van Oordt/OneDrive - McGill University/Documents/McGill/00Res Prop v2/Chap 0 BC isotopes")
+setwd("~/Chap 0 BC isotopes")
 #Load SIA for C, N and S, and also deh AASIA
 wkSIA <- read.csv("WK file Seabird Hg.csv", header = T, na.strings=c("", "NA"))
 AASIA<- read.csv("AASIA.csv", header = TRUE) #species code has been split to merge with other SIA dataframe
