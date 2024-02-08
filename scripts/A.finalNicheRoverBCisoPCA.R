@@ -20,29 +20,31 @@ MM<-read.csv("raw_data/AASIA_raw_data.csv") # read object with original filtered
 ##PCA of all AASIA Cs and Ns ###################
 
 #CHOOSE SET OF AASIA: all carbons
-res.pca <- prcomp(MM[, c("dC_Ala","dC_Val","dC_Gly","dC_Ile","dC_Leu","dC_Pro",
-                         "dC_Asp","dC_Phe","dC_Glu","dC_Lys")], scale = TRUE)
+res.pca <- prcomp(MM[, c("dC_Ala","dC_Val","dC_Gly",
+                         "dC_Ile","dC_Leu","dC_Pro",
+                         "dC_Asp","dC_Phe","dC_Glu",
+                         "dC_Lys")], scale = TRUE)
 
 #Append PC1 score to data ALL Css
-MM$PC1Css <- scores(res.pca, choices=c(1))
-MM$PC2Css <- scores(res.pca, choices=c(2))
-MM$PC3Css <- scores(res.pca, choices=c(3))
+MM$PC1Css <- as.numeric(scores(res.pca, choices=c(1)))
+MM$PC2Css <- as.numeric(scores(res.pca, choices=c(2)))
+MM$PC3Css <- as.numeric(scores(res.pca, choices=c(3)))
 
 #run and append PCs for ALL Nss
 res.pca <- prcomp(MM[, c("dN_Ala","dN_Asp","dN_Glu","dN_Gly",
                          "dN_Ile","dN_Leu","dN_Lys","dN_Phe",
                          "dN_Pro","dN_Val" )], scale = TRUE)
 
-MM$PC1Nss <- scores(res.pca, choices=c(1))
-MM$PC2Nss <- scores(res.pca, choices=c(2))
-MM$PC3Nss <- scores(res.pca, choices=c(3))
+MM$PC1Nss <- as.numeric(scores(res.pca, choices=c(1)))
+MM$PC2Nss <- as.numeric(scores(res.pca, choices=c(2)))
+MM$PC3Nss <- as.numeric(scores(res.pca, choices=c(3)))
 
 ########Standardizing variables##################################################
 
 MM$stdDelta.S<-NULL
 MM$stdDelta.S<-(MM$Delta.S-(mean(MM$Delta.S)))/sd(MM$Delta.S)
 
-
+#write.csv(MM, "raw_data/AASIA_data.csv")
 #####
 set.seed(4321)
 nsamples<-100000
