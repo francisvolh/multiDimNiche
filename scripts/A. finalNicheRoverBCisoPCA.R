@@ -11,6 +11,7 @@ library(nicheROVER)
 library(ggplot2)
 library(ggpubr)
 library(hdrcde)
+library(abind)
 
 #########################################################################
 #Call raw subset data 
@@ -26,18 +27,18 @@ res.pca <- prcomp(MM[, c("dC_Ala","dC_Val","dC_Gly",
                          "dC_Lys")], scale = TRUE)
 
 #Append PC1 score to data ALL Css
-MM$PC1Css <- as.numeric(scores(res.pca, choices=c(1)))
-MM$PC2Css <- as.numeric(scores(res.pca, choices=c(2)))
-MM$PC3Css <- as.numeric(scores(res.pca, choices=c(3)))
+MM$PC1Css <- as.numeric(vegan::scores(res.pca, choices=c(1))) # could extract without vegan!
+MM$PC2Css <- as.numeric(vegan::scores(res.pca, choices=c(2)))
+MM$PC3Css <- as.numeric(vegan::scores(res.pca, choices=c(3)))
 
 #run and append PCs for ALL Nss
 res.pca <- prcomp(MM[, c("dN_Ala","dN_Asp","dN_Glu","dN_Gly",
                          "dN_Ile","dN_Leu","dN_Lys","dN_Phe",
                          "dN_Pro","dN_Val" )], scale = TRUE)
 
-MM$PC1Nss <- as.numeric(scores(res.pca, choices=c(1)))
-MM$PC2Nss <- as.numeric(scores(res.pca, choices=c(2)))
-MM$PC3Nss <- as.numeric(scores(res.pca, choices=c(3)))
+MM$PC1Nss <- as.numeric(vegan::scores(res.pca, choices=c(1)))
+MM$PC2Nss <- as.numeric(vegan::scores(res.pca, choices=c(2)))
+MM$PC3Nss <- as.numeric(vegan::scores(res.pca, choices=c(3)))
 
 ########Standardizing variables##################################################
 
@@ -49,7 +50,7 @@ MM$stdDelta.S<-(MM$Delta.S-(mean(MM$Delta.S)))/sd(MM$Delta.S)
 set.seed(4321)
 nsamples<-100000
 
-ndim<-1 ## Choose dimensions to run model which will be the same as nisotope, but I want to keep them separate
+ndim<-3 ## Choose dimensions to run model which will be the same as nisotope, but I want to keep them separate
 
 # nicheRover model will run in line 112
 
@@ -60,9 +61,7 @@ ndim<-1 ## Choose dimensions to run model which will be the same as nisotope, bu
 ##
 
 #Libraries
-library(abind)
-library(hdrcde)
-library(nicheROVER)
+
 
 print(paste("Started at", Sys.time()))
 #######################################################
@@ -217,7 +216,7 @@ nisotope <- length(isotopes) # numner of isotopes/dimensions used
 ncol <- 1:nspp # seq of species numbers
 nrows <- 1:nsamples # seq of sample numbers
 
-print(paste("model run for", isotopes, "isotopes for", nsamples, "iterations"))
+print(paste("model run for", paste(isotopes, collapse = ' '), "isotopes for", nsamples, "iterations"))
 #######################################################
 # Then extract the niche metrics for each species
 cr.p = c(0.05, 0.95) 
@@ -325,14 +324,14 @@ output <- NULL
 for (i in 1:nspp) {
   data <- BCiso.par[[i]]
   mu <- as.data.frame(data[1])
-  output <- abind(output, mu, along = 3)
+  output <- abind::abind(output, mu, along = 3)
   
 }
 
 output2 <- NULL
 for (i in 1:nisotope) {
   output1.1 <- output[,i,]
-  output2 <- abind(output2, output1.1, along = 3)
+  output2 <- abind::abind(output2, output1.1, along = 3)
 }
 dim(output2)
 
